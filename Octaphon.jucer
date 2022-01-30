@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="KONqgn" name="Octophon" projectType="guiapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="1" jucerFormatVersion="1" headerPath="~/Projects/Octaphon/Source&#10;~/Projects/Octaphon/Source/DSP"
+              bundleIdentifier="com.robertsonics.octaphon">
+  <MAINGROUP id="Pazthf" name="Octophon">
+    <GROUP id="{7C3CA0B6-9721-6AD1-48C7-36F437DF311F}" name="Source">
+      <GROUP id="{28DA7AB2-1EFF-09DB-F087-03E116B88673}" name="DSP">
+        <FILE id="La5Ddz" name="DspUtils.cpp" compile="1" resource="0" file="Source/DSP/DspUtils.cpp"/>
+        <FILE id="jwQ9EB" name="DspUtils.h" compile="0" resource="0" file="Source/DSP/DspUtils.h"/>
+        <FILE id="u8l8bK" name="PitchBend.cpp" compile="1" resource="0" file="Source/DSP/PitchBend.cpp"/>
+        <FILE id="Kipay3" name="PitchBend.h" compile="0" resource="0" file="Source/DSP/PitchBend.h"/>
+      </GROUP>
+      <FILE id="hYAy5Q" name="Config.h" compile="0" resource="0" file="Source/Config.h"/>
+      <FILE id="e7r96T" name="Sound.cpp" compile="1" resource="0" file="Source/Sound.cpp"/>
+      <FILE id="MuhZR4" name="Sound.h" compile="0" resource="0" file="Source/Sound.h"/>
+      <FILE id="jD53MW" name="Interface.cpp" compile="1" resource="0" file="Source/Interface.cpp"/>
+      <FILE id="O2kS9X" name="Interface.h" compile="0" resource="0" file="Source/Interface.h"/>
+      <FILE id="NotnQg" name="Rmixer.cpp" compile="1" resource="0" file="Source/Rmixer.cpp"/>
+      <FILE id="Eocehj" name="Rmixer.h" compile="0" resource="0" file="Source/Rmixer.h"/>
+      <FILE id="mFHZl5" name="SoundManager.cpp" compile="1" resource="0"
+            file="Source/SoundManager.cpp"/>
+      <FILE id="r37xPT" name="SoundManager.h" compile="0" resource="0" file="Source/SoundManager.h"/>
+      <FILE id="PQdPRe" name="Voice.cpp" compile="1" resource="0" file="Source/Voice.cpp"/>
+      <FILE id="uOgouT" name="Voice.h" compile="0" resource="0" file="Source/Voice.h"/>
+      <FILE id="k4VX6j" name="VoiceManager.cpp" compile="1" resource="0"
+            file="Source/VoiceManager.cpp"/>
+      <FILE id="KDy1Qs" name="VoiceManager.h" compile="0" resource="0" file="Source/VoiceManager.h"/>
+      <FILE id="fNeCgr" name="MidiManager.cpp" compile="1" resource="0" file="Source/MidiManager.cpp"/>
+      <FILE id="zRRyGY" name="MidiManager.h" compile="0" resource="0" file="Source/MidiManager.h"/>
+      <FILE id="DCWI9l" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="uPgqyu" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="m9PgLz" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <CODEBLOCKS_LINUX targetFolder="Builds/CodeBlocksLinux" extraCompilerFlags="-Wno-psabi"
+                      extraLinkerFlags="-latomic -no-pie" externalLibraries="asound">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="octaphon"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="octaphon"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </CODEBLOCKS_LINUX>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraCompilerFlags="-Wno-psabi"
+                extraLinkerFlags="-latomic -no-pie" externalLibraries="asound">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="octaphon"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="octaphon"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+</JUCERPROJECT>
