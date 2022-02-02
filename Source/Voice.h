@@ -26,6 +26,7 @@
 #include "Config.h"
 #include "DspUtils.h"
 #include "PitchBend.h"
+#include "Fader.h"
 
 // We need an output audio buffer large enough to hold twice the number of
 //  samples in an alsa period, because the mixer could be doing sample-rate
@@ -33,22 +34,15 @@
 
 #define DSP_BUFFER_SAMPLES      (ALSA_PERIOD_FRAMES * 4)
 
-// Our ADSR modes
-enum {
-    ADSR_MODE_INACTIVE = 0,
-    ADSR_MODE_ATTACK,
-    ADSR_MODE_RELEASE
-};
-
 // This structure is use to prepare the voice for playing a particular sound.
 typedef struct {
 
-    uint16_t soundIndex;
-    float gain_dB[NUM_OUTPUTS];
-    const float * pSoundBase;
-    int64 numSamples;
-    uint8_t midiNote;
     bool enabled;
+    uint8_t midiNote;
+    uint16_t soundIndex;
+    int64 numSamples;
+    const float * pSoundBase;
+    float * gain_dB;
 
 } VOICE_PLAY_STRUCTURE;
 
@@ -64,8 +58,6 @@ public:
 	uint8_t getState()                          { return state; }
 	void setState(int newState)                 { state = newState; }
 	void setDspUtils(DspUtils * gu)             { dspUtils = gu; }
-	void setAttackTimeMs(float atime_ms);
-	void setReleaseTimeMs(float rtime_ms);
 	uint8_t getMidiNote()                       { return midiNote; }
 
     bool prepare(VOICE_PLAY_STRUCTURE * play);
@@ -90,16 +82,10 @@ private:
     uint64_t totalSamples;                      // length in samples of sound
     uint64_t samplesPlayed;                     // samples played if playing
 
-    uint8_t adsrMode;
-    float adsrAttack_Ms;
-    float adsrRelease_Ms;
-    float adsrCurrGain_dB;
-    float adsrTargGain_dB;
-    float adsrDeltaGain_dB;
-
     DspUtils *dspUtils;
 
     std::unique_ptr<PitchBend> pitchBend;
+    std::unique_ptr<Fader> fader;
 
     bool firstBufferFlag;
     float voiceGain_dB[NUM_OUTPUTS];

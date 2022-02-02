@@ -30,6 +30,7 @@
 #include "VoiceManager.h"
 #include "MidiManager.h"
 #include "Interface.h"
+#include "MyLookAndFeel.h"
 
 
 //==============================================================================
@@ -71,6 +72,8 @@ private:
 
  	AudioDeviceManager deviceManager;
 	int lastInputIndex;
+
+	MyLookAndFeel myLookAndFeel;
 
 	DspUtils dspUtils;
     SoundManager soundManager;

@@ -12,6 +12,8 @@
         <FILE id="Kipay3" name="PitchBend.h" compile="0" resource="0" file="Source/DSP/PitchBend.h"/>
       </GROUP>
       <FILE id="hYAy5Q" name="Config.h" compile="0" resource="0" file="Source/Config.h"/>
+      <FILE id="PKyhFc" name="MyLookAndFeel.h" compile="0" resource="0" file="Source/MyLookAndFeel.h"/>
+      <FILE id="Lt24CD" name="LevelMeter.h" compile="0" resource="0" file="Source/LevelMeter.h"/>
       <FILE id="e7r96T" name="Sound.cpp" compile="1" resource="0" file="Source/Sound.cpp"/>
       <FILE id="MuhZR4" name="Sound.h" compile="0" resource="0" file="Source/Sound.h"/>
       <FILE id="jD53MW" name="Interface.cpp" compile="1" resource="0" file="Source/Interface.cpp"/>
@@ -21,6 +23,8 @@
       <FILE id="mFHZl5" name="SoundManager.cpp" compile="1" resource="0"
             file="Source/SoundManager.cpp"/>
       <FILE id="r37xPT" name="SoundManager.h" compile="0" resource="0" file="Source/SoundManager.h"/>
+      <FILE id="ur2hEu" name="Fader.cpp" compile="1" resource="0" file="Source/Fader.cpp"/>
+      <FILE id="Ycy0RJ" name="Fader.h" compile="0" resource="0" file="Source/Fader.h"/>
       <FILE id="PQdPRe" name="Voice.cpp" compile="1" resource="0" file="Source/Voice.cpp"/>
       <FILE id="uOgouT" name="Voice.h" compile="0" resource="0" file="Source/Voice.h"/>
       <FILE id="k4VX6j" name="VoiceManager.cpp" compile="1" resource="0"

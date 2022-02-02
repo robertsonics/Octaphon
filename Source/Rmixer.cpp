@@ -307,8 +307,6 @@ void Rmixer::setPitchBend(int pb) {
         m_sampleIncrement = UNITY_PITCH_INC - (((8192 - pb) * PITCH_DN_MAX) / 8192);
     else
         m_sampleIncrement = UNITY_PITCH_INC;
-
-
 }
 
 // **************************************************************************
@@ -318,7 +316,11 @@ void Rmixer::getStats(MIXER_STATS_STRUCTURE * stats) {
 
     stats->frameMsAve = dspFrameMsAve;
     stats->frameMsMax = dspFrameMsMax;
+    stats->intervalMsAve = audioIntervalMsAve;
+    stats->intervalMsMax = audioIntervalMsMax;
     stats->underruns = dspUnderruns;
+    for (int n = 0; n < NUM_OUTPUTS; n++)
+        stats->rmsLevel[n] = currentRMSLevel[n];
 }
 
 // **************************************************************************
@@ -329,14 +331,20 @@ void Rmixer::run() {
 snd_pcm_uframes_t uframes;
 snd_pcm_uframes_t pframes;
 int alsa_err;
+int n;
 
 juce::int64 startTick = 0;
 juce::int64 endTick;
+juce::int64 lastTick;
 double thisDeltaTimeMs;
 float localFrameMsMax = 0.0f;
 float localFrameMsAve = 0.0f;
 float localFrameMsAcc = 0.0f;
+float localIntervalMsMax = 0.0f;
+float localIntervalMsAve = 0.0f;
+float localIntervalMsAcc = 0.0f;
 int localUnderruns = 0;
+float localRMSLevel[NUM_OUTPUTS];
 
 bool dbgExit = false;
 
@@ -347,6 +355,7 @@ bool dbgExit = false;
     dspFrameMsMax = 0.0f;
     dspFrameMsAve = 0.0f;
 	time = new Time();
+    lastTick = time->getHighResolutionTicks();
 
 	while (!threadShouldExit() && !dbgExit) {
 
@@ -377,7 +386,7 @@ bool dbgExit = false;
 
             // If we're in sync ID mode, then send the special data on just the first and second channels
             if (syncModeEnabled) {
-                DstSampleType dst0LData(&hwBuff[0], 8);
+                DstSampleType dst0LData(&hwBuff[0], NUM_OUTPUTS);
                 SrcSampleType src0LData((AudioData::NonConst::VoidType *)syncBuffer.getReadPointer(0));
                 dst0LData.convertSamples(src0LData, (m_numframes / 4));
              }
@@ -391,35 +400,41 @@ bool dbgExit = false;
                 // Do pitch bending here
                 pitchBend->process(mixBuffer, mainsBuffer);
 
+                // Get the RMS levels for our metering
+                for (n = 0; n < NUM_OUTPUTS; n++) {
+                    localRMSLevel[n] = Decibels::gainToDecibels(mainsBuffer.getRMSLevel(n, 0, (m_numframes / 4)));
+                }
+
                 // Convert to fixed and send to the PCM devices
-                DstSampleType dst1LData(&hwBuff[0], 8);
+                DstSampleType dst1LData(&hwBuff[0], NUM_OUTPUTS);
                 SrcSampleType src1LData((AudioData::NonConst::VoidType *)mainsBuffer.getReadPointer(0));
                 dst1LData.convertSamples(src1LData, (m_numframes / 4));
-                DstSampleType dst1RData(&hwBuff[1], 8);
+                DstSampleType dst1RData(&hwBuff[1], NUM_OUTPUTS);
                 SrcSampleType src1RData((AudioData::NonConst::VoidType *)mainsBuffer.getReadPointer(1));
                 dst1RData.convertSamples(src1RData, (m_numframes / 4));
 
-                DstSampleType dst2LData(&hwBuff[2], 8);
+                DstSampleType dst2LData(&hwBuff[2], NUM_OUTPUTS);
                 SrcSampleType src2LData((AudioData::NonConst::VoidType *)mainsBuffer.getReadPointer(2));
                 dst2LData.convertSamples(src2LData, (m_numframes / 4));
-                DstSampleType dst2RData(&hwBuff[3], 8);
+                DstSampleType dst2RData(&hwBuff[3], NUM_OUTPUTS);
                 SrcSampleType src2RData((AudioData::NonConst::VoidType *)mainsBuffer.getReadPointer(3));
                 dst2RData.convertSamples(src2RData, (m_numframes / 4));
 
-                DstSampleType dst3LData(&hwBuff[4], 8);
+                DstSampleType dst3LData(&hwBuff[4], NUM_OUTPUTS);
                 SrcSampleType src3LData((AudioData::NonConst::VoidType *)mainsBuffer.getReadPointer(4));
                 dst3LData.convertSamples(src3LData, (m_numframes / 4));
-                DstSampleType dst3RData(&hwBuff[5], 8);
+                DstSampleType dst3RData(&hwBuff[5], NUM_OUTPUTS);
                 SrcSampleType src3RData((AudioData::NonConst::VoidType *)mainsBuffer.getReadPointer(5));
                 dst3RData.convertSamples(src3RData, (m_numframes / 4));
 
-                DstSampleType dst4LData(&hwBuff[6], 8);
+                DstSampleType dst4LData(&hwBuff[6], NUM_OUTPUTS);
                 SrcSampleType src4LData((AudioData::NonConst::VoidType *)mainsBuffer.getReadPointer(6));
                 dst4LData.convertSamples(src4LData, (m_numframes / 4));
-                DstSampleType dst4RData(&hwBuff[7], 8);
+                DstSampleType dst4RData(&hwBuff[7], NUM_OUTPUTS);
                 SrcSampleType src4RData((AudioData::NonConst::VoidType *)mainsBuffer.getReadPointer(7));
                 dst4RData.convertSamples(src4RData, (m_numframes / 4));
             }
+
 
             // Grab the current high res tick and calculate how long our frame processing
             //  took. If we exceed the previous maximum, update the max and signal that
@@ -431,8 +446,21 @@ bool dbgExit = false;
                     localFrameMsMax = 0.0f;
                     localFrameMsAve = 0.0f;
                     localFrameMsAcc = 0.0f;
+                    localIntervalMsMax = 0.0f;
+                    localIntervalMsAve = 0.0f;
+                    localIntervalMsAcc = 0.0f;
                     localUnderruns = 0;
                 }
+
+                // Calculate the time since the last frame;
+                thisDeltaTimeMs = time->highResolutionTicksToSeconds(startTick - lastTick) * 1000.0;
+                if (thisDeltaTimeMs > localIntervalMsMax)
+                    localIntervalMsMax = thisDeltaTimeMs;
+                localIntervalMsAcc = (localIntervalMsAcc * 63.0f / 64.0f) + thisDeltaTimeMs;
+                localIntervalMsAve = localIntervalMsAcc / 64.0f;
+                lastTick = startTick;
+
+                // Calculate the time spent in this routine;
                 thisDeltaTimeMs = time->highResolutionTicksToSeconds(endTick - startTick) * 1000.0;
                 if (thisDeltaTimeMs > localFrameMsMax)
                     localFrameMsMax = thisDeltaTimeMs;
@@ -444,6 +472,10 @@ bool dbgExit = false;
                     if (!m_changePendingFlag) {
                         dspFrameMsMax = localFrameMsMax;
                         dspFrameMsAve = localFrameMsAve;
+                        audioIntervalMsMax = localIntervalMsMax;
+                        audioIntervalMsAve = localIntervalMsAve;
+                        for (n = 0; n < NUM_OUTPUTS; n++)
+                            currentRMSLevel[n] = localRMSLevel[n];
                         dspUnderruns = localUnderruns;
                         m_changePendingFlag = true;
                         sendChangeMessage();

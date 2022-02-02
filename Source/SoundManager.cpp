@@ -91,25 +91,20 @@ void SoundManager::reset() {
 bool SoundManager::playSounds(uint8_t note, SM_PLAY_STRUCTURE * smp) {
 
 VM_PLAY_STRUCTURE vmp;
-int n, o;
+int n;
 uint16_t s;
 
     memset(&vmp, 0, sizeof(VM_PLAY_STRUCTURE));
     for (n = 0; n < NUM_OUTPUTS; n++) {
-        if (smp->snd[n].enabled) {
-            s = smp->snd[n].soundIndex;
-            if (sound[s].exists()) {
-                vmp.vp[n].enabled = true;
-                vmp.vp[n].midiNote = note;
-                vmp.vp[n].soundIndex = s;
-                vmp.vp[n].pSoundBase = sound[s].getSoundBase();
-                vmp.vp[n].numSamples = sound[s].getNumSamples();
-                for (o = 0; o < NUM_OUTPUTS; o++)
-                    vmp.vp[n].gain_dB[o] = smp->snd[n].gain_dB[o];
-            }
+        s = smp->snd[n].soundIndex;
+        if (sound[s].exists()) {
+            vmp.vp[n].enabled = true;
+            vmp.vp[n].midiNote = note;
+            vmp.vp[n].soundIndex = s;
+            vmp.vp[n].pSoundBase = sound[s].getSoundBase();
+            vmp.vp[n].numSamples = sound[s].getNumSamples();
+            vmp.vp[n].gain_dB = smp->snd[n].gain_dB;
         }
-        else
-            break;
     }
     voiceManager->play(&vmp);
     return true;

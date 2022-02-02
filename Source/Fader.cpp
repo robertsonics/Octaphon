@@ -1,6 +1,6 @@
 // **************************************************************************
-//     Filename: SoundManager.h
-// Date Created: 1/23/2022
+//     Filename: Fader.cpp
+// Date Created: 1/30/2022
 //
 // This module is part of the Robertsonics Octaphon project
 //
@@ -21,47 +21,22 @@
 //
 // **************************************************************************
 
-#pragma once
-
-#include <JuceHeader.h>
-#include "Sound.h"
-#include "VoiceManager.h"
-
-typedef struct {
-
-    int16_t soundIndex;
-    float * gain_dB;
-
-} SOUND_PLAY_STRUCTURE;
-
-typedef struct {
-
-    int numSounds;
-    SOUND_PLAY_STRUCTURE snd[NUM_OUTPUTS];
-
-} SM_PLAY_STRUCTURE;
+#include <unistd.h>
+#include "Fader.h"
 
 
 // **************************************************************************
-class SoundManager  {
+// Fader
+// **************************************************************************
+Fader::Fader(int v) {
 
-public:
-	SoundManager();
-	~SoundManager();
 
-	void setSoundPath(String sndPath)           { soundPath = sndPath; }
-	bool loadSound(String cmdLine);
-	void setVoiceManager(VoiceManager * vm)     { voiceManager = vm; }
-	void reset();
+}
 
-	bool playSounds(uint8_t note, SM_PLAY_STRUCTURE * smp);
+// **************************************************************************
+// ~Fader
+// **************************************************************************
+Fader::~Fader() {
 
-private:
-
-    VoiceManager * voiceManager;
-
-    String soundPath;
-    Sound sound[MAX_SOUNDS_PER_BANK];
-
-}; // end class SoundManager
+}
 

@@ -34,6 +34,8 @@ String dmsg;
 
     setSize (800, 480);
 
+    LookAndFeel::setDefaultLookAndFeel(&myLookAndFeel);
+
     midiBox.reset (new juce::ComboBox ("port combo box"));
     addAndMakeVisible (midiBox.get());
     midiBox->setEditableText (false);
@@ -41,21 +43,21 @@ String dmsg;
     midiBox->setTextWhenNothingSelected (juce::String());
     midiBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     midiBox->addListener (this);
-    midiBox->setBounds(getWidth() - 280, 20, 260, 24);
+    midiBox->setBounds(getWidth() - 280, 10, 260, 24);
 
     lblVersion.reset (new juce::Label ("new label",
-                                        TRANS("Audio Test Version 0.10")));
+                                        TRANS("Test Version 0.10")));
     addAndMakeVisible (lblVersion.get());
     lblVersion->setFont (juce::Font (16.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
     lblVersion->setJustificationType (juce::Justification::centredLeft);
     lblVersion->setEditable (false, false, false);
     lblVersion->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     lblVersion->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    lblVersion->setBounds (20, 20, 200, 24);
+    lblVersion->setBounds (20, 10, 200, 24);
 
     interface.reset(new Interface(this, &rmixer, &voiceManager, &soundManager));
     addAndMakeVisible(interface.get());
-    interface->setBounds(0, 110, getWidth(), getHeight() - 110);
+    interface->setBounds(0, 42, getWidth(), getHeight() - 42);
 
 	// Populate the MIDI In combo box with available devices and open the first
 	//  one in the list if there are any. Otherwise create a single notification
@@ -84,7 +86,7 @@ String dmsg;
     midiManager.setSoundManager(&soundManager);
     midiManager.setVoiceManager(&voiceManager);
     rmixer.setVoiceManager(&voiceManager);
-    rmixer.setPitchBend(8192);
+    //rmixer.setPitchBend(8192);
     //rmixer.clearChangePending();
     //rmixer.addChangeListener(this);
     //rmixer.setStatsEnabled(true);

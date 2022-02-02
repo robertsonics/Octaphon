@@ -38,14 +38,17 @@
 
 #define HW_BUFFER_SAMPLES      (ALSA_PERIOD_FRAMES * 2)
 
+#define PITCH_UP_MAX    32657
+#define PITCH_DN_MAX    21796
+
 typedef struct {
     float frameMsAve;
     float frameMsMax;
+    float intervalMsAve;
+    float intervalMsMax;
+    float rmsLevel[NUM_OUTPUTS];
     int underruns;
 } MIXER_STATS_STRUCTURE;
-
-#define PITCH_UP_MAX    32657
-#define PITCH_DN_MAX    21796
 
 
 // **************************************************************************
@@ -62,6 +65,8 @@ public:
 		resetStatsFlag = false;
 		dspFrameMsMax = 0.0f;
 		dspFrameMsAve = 0.0f;
+		audioIntervalMsMax = 0.0f;
+		audioIntervalMsAve = 0.0f;
 		dspUnderruns = 0;
 	}
 	~Rmixer();
@@ -96,6 +101,9 @@ private:
     bool resetStatsFlag;
 	float dspFrameMsMax;
 	float dspFrameMsAve;
+	float audioIntervalMsMax;
+	float audioIntervalMsAve;
+	float currentRMSLevel[NUM_OUTPUTS];
 	int dspUnderruns;
 
     std::unique_ptr<PitchBend> pitchBend;
@@ -107,11 +115,11 @@ private:
     // Voice mixing and is done in a non-interleaved stereo juce AudioBuffer. This
     //  buffer needs to be large enough to handle at least 2X the nominal number of
     //  frames to account for pitch bending up to 1 octave.
-    juce::AudioBuffer<float> mixBuffer {8, (MIX_BUFFER_SAMPLES * 2)};
+    juce::AudioBuffer<float> mixBuffer {NUM_OUTPUTS, (MIX_BUFFER_SAMPLES * 2)};
 
     // The sample rate conversion results in a nominal buffer ready for any dsp
     //  to be applied to the main stereo output
-    juce::AudioBuffer<float> mainsBuffer {8, MIX_BUFFER_SAMPLES};
+    juce::AudioBuffer<float> mainsBuffer {NUM_OUTPUTS, MIX_BUFFER_SAMPLES};
 
     // We need a single channel buffer to hold the special sync data when we start up
     juce::AudioBuffer<float> syncBuffer {1, MIX_BUFFER_SAMPLES};

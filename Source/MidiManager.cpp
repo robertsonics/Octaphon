@@ -95,20 +95,19 @@ String soundFilePath;
 // **************************************************************************
 void MidiManager::noteOn(uint8_t n, uint8_t v) {
 
-int a, o;
+int a;
 SM_PLAY_STRUCTURE smp;
 
     if (n < NUM_MIDI_NOTES) {
         memset(&smp, 0, sizeof(SM_PLAY_STRUCTURE));
         for (a = 0; a < note[n].numActions; a++) {
-            smp.snd[a].enabled = true;
             smp.snd[a].soundIndex = note[n].action[a].soundIndex;
-            for (o = 0; o < NUM_OUTPUTS; o++) {
-                smp.snd[a].gain_dB[o] = note[n].action[a].gain_dB[o];
-            }
+            smp.snd[a].gain_dB = &note[n].action[a].gain_dB[0];
         }
-        if (a > 0)
+        if (a > 0) {
+            smp.numSounds = a;
             soundManager->playSounds(n, &smp);
+        }
     }
 }
 

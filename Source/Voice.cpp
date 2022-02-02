@@ -35,11 +35,9 @@ Voice::Voice(int v) {
     m_changePendingFlag = false;
     state = VOICE_STATE_READY;
     loopFlag = false;
-    setAttackTimeMs(0.0f);
-    //setReleaseTimeMs(200.0f);
-    setReleaseTimeMs(0.0f);
+    //pitchBend.reset(new PitchBend(m_numframes / 4));
+    fader.reset(new Fader(voiceNum));
 
-    adsrMode = ADSR_MODE_INACTIVE;
 }
 
 // **************************************************************************
@@ -54,6 +52,7 @@ Voice::~Voice() {
 // **************************************************************************
 bool Voice::prepare(VOICE_PLAY_STRUCTURE * play) {
 
+/*
     String vMsg("Voice ");
     vMsg += voiceNum;
     vMsg += ", Sound ";
@@ -61,11 +60,11 @@ bool Voice::prepare(VOICE_PLAY_STRUCTURE * play) {
     vMsg += ", Note ";
     vMsg += play->midiNote;
     for (int o = 0; o < NUM_OUTPUTS; o++) {
-        vMsg += ", ";
+       vMsg += ", ";
         vMsg += String(play->gain_dB[o]);
     }
     DBG(vMsg);
-
+*/
     state = VOICE_STATE_EMPTY;
     soundNum = play->soundIndex;
     totalSamples = play->numSamples;
@@ -95,16 +94,6 @@ void Voice::start() {
         samplesPlayed = 0;
         readPointer = (float *)soundBuffer;
         firstBufferFlag = true;
-
-        // If our attack time is not 0, set the starting and ending gain_dB
-        //  values and enable the ADSR attack mode.
-        if (adsrAttack_Ms > 0.0f) {
-            adsrCurrGain_dB = -60.0f;
-            adsrTargGain_dB = 0.0f;
-            adsrMode = ADSR_MODE_ATTACK;
-        }
-        else
-            adsrMode = ADSR_MODE_INACTIVE;
         state = VOICE_STATE_PLAYING;
     }
 }
@@ -116,38 +105,8 @@ void Voice::stop() {
 
     if (state == VOICE_STATE_PLAYING) {
 
-        // If for some strange reason the release is already active, just return
-        if (adsrMode == ADSR_MODE_RELEASE)
-            return;
-
-        // If our release time is not 0, set the starting and ending gain_dB
-        //  values and enable the ADSR release mode;
-        if (adsrRelease_Ms > 0.0f) {
-            adsrCurrGain_dB = 0.0f;
-            adsrTargGain_dB = -70.0f;
-            adsrMode = ADSR_MODE_RELEASE;
-        }
-        else
-            state = VOICE_STATE_READY;
+        state = VOICE_STATE_READY;
     }
-}
-
-// **************************************************************************
-// setAttackTime
-// **************************************************************************
-void Voice::setAttackTimeMs(float atime_ms) {
-
-    adsrAttack_Ms = atime_ms;
-    adsrDeltaGain_dB = 50.0 / 100.0;
-
-}
-
-// **************************************************************************
-// setReleaseTime
-// **************************************************************************
-void Voice::setReleaseTimeMs(float rtime_ms) {
-
-    adsrRelease_Ms = rtime_ms;
 }
 
 // **************************************************************************
