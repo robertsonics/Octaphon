@@ -165,8 +165,7 @@ int row2 = 374;
     rmixer->clearChangePending();
     rmixer->addChangeListener(this);
     rmixer->setStatsEnabled(true);
-    startTimer(30);
-
+    startTimerHz(24);
 }
 
 Interface::~Interface()
@@ -196,23 +195,52 @@ Interface::~Interface()
 //==============================================================================
 void Interface::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colours::black);
-    g.setColour(juce::Colours::skyblue);
-    g.drawHorizontalLine(252, 78.0f, 694.0f);
-    g.drawSingleLineText("-60dB", 74, 256, Justification::right);
-    g.drawHorizontalLine(48, 78.0f, 694.0f);
-    g.drawSingleLineText("0dB", 74, 52, Justification::right);
+
+float v, vs;
+
+    g.fillAll (Colours::black);
+
+    g.setColour(Colours::white);
+    vs = (meter_height / meter_ticks);
+    float f = meter_left - 10.0f;
+
+    for (int m = 0; m < num_meters; m++) {
+
+        v = meter_top;
+
+        for (int t = 0; t < meter_ticks; t++) {
+            g.drawHorizontalLine(v, f, f + 10.0f);
+            g.drawHorizontalLine(v + (vs / 2.0f), f + 5.0f, f + 10.0f);
+            v += vs;
+        }
+        v -= 1.0f;
+        g.drawHorizontalLine(v, f, f + 10.0f);
+
+        g.setFont(11.0f);
+        v = meter_top + 3.0f;
+        g.drawSingleLineText("0", f - 4, v, Justification::right);
+        v += vs;
+        g.drawSingleLineText("-10", f - 4, v, Justification::right);
+        v += vs;
+        g.drawSingleLineText("-20", f - 4, v, Justification::right);
+        v += vs;
+        g.drawSingleLineText("-30", f - 4, v, Justification::right);
+        v += vs;
+        g.drawSingleLineText("-40", f - 4, v, Justification::right);
+        v += vs;
+        g.drawSingleLineText("-50", f - 4, v, Justification::right);
+        v += vs;
+        g.drawSingleLineText("-60", f - 4, v, Justification::right);
+
+        f += meter_spacing;
+    }
 }
 
 void Interface::resized()
 {
-
-int hBase = 100;
-int hSpace = 84;
-
     for (int m = 0; m < 8; m++) {
-        verticalMeter[m].setBounds(hBase + (m * hSpace), 32, 6, 220);
-        meterLabel[m]->setBounds(hBase + (m * hSpace) - 20, 260, 60, 30);
+        verticalMeter[m].setBounds(meter_left + (m *meter_spacing), meter_top, meter_width, meter_height);
+        //meterLabel[m]->setBounds(hBase + (m * hSpace) - 20, 260, 60, 30);
     }
 }
 
@@ -238,10 +266,11 @@ MIXER_STATS_STRUCTURE mStats;
         lblAudioFrameAve->setText(String(mStats.frameMsAve, 3), dontSendNotification);
         lblAudioFrameMax->setText(String(mStats.frameMsMax, 3), dontSendNotification);
         lblAudioUnderruns->setText(String(mStats.underruns), dontSendNotification);
+		for (int n = 0; n < 8; n++) {
+            verticalMeter[n].setLevel(mStats.rmsLevel[n]);
+        }
 		rmixer->clearChangePending();
 		lblActiveVoices->setText(String(voiceManager->getActiveVoices()), dontSendNotification);
-		verticalMeter[0].setLevel(mStats.rmsLevel[0]);
-		verticalMeter[1].setLevel(mStats.rmsLevel[1]);
 	}
     if (mainComponent->getChangePending()) {
         mainComponent->clearChangePending();

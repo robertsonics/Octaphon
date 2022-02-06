@@ -45,10 +45,8 @@ private:
 	// Variables for samplerate conversion algorithm
 	uint32_t sampleFractInc;
 	U32_UNION sampleFractAcc;
-	double curSampleLeft;
-	double curSampleRight;
-	double nxtSampleLeft;
-	double nxtSampleRight;
+	double curSample[NUM_OUTPUTS];
+	double nxtSample[NUM_OUTPUTS];
 
 	int m_numframes;
 

@@ -37,14 +37,20 @@ public:
     }
 
     void setLevel(float newLevel) {
-        currentLevel = newLevel;
+        targetLevel = newLevel;
+        if (targetLevel > currentLevel)
+            currentLevel = targetLevel;
+        else if ((currentLevel - targetLevel) > 1.5f)
+            currentLevel -= 1.5f;
+        else
+            currentLevel = targetLevel;
         repaint();
     }
 
     void paint (juce::Graphics& g) override {
 
         auto bounds = getLocalBounds().toFloat();
-        g.setColour(Colours::black);
+        g.setColour(Colour(0xff323232));
         g.fillRect(bounds);
         g.setGradientFill(gradient);
         const auto scaledY = jmap(currentLevel, -60.0f, 6.0f, 0.0f, static_cast<float>(getHeight()));
@@ -68,6 +74,7 @@ private:
 
     ColourGradient gradient;
     float currentLevel;
+    float targetLevel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VerticalMeter)
 };

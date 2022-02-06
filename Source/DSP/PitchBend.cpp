@@ -31,10 +31,10 @@ PitchBend::PitchBend(int frames) {
     m_numframes = frames;
     sampleFractInc = UNITY_PITCH_INC;
     sampleFractAcc.u32 = 0;
-    curSampleLeft = 0.0f;
-    curSampleRight = 0.0f;
-    nxtSampleLeft = 0.0f;
-    nxtSampleRight = 0.0f;
+    for (int n = 0; n < NUM_OUTPUTS; n++) {
+        curSample[n] = 0.0f;
+        nxtSample[n] = 0.0f;
+    }
 }
 
 // **************************************************************************
@@ -51,10 +51,10 @@ PitchBend::~PitchBend() {
 void PitchBend::reset() {
 
     sampleFractAcc.u32 = 0;
-    curSampleLeft = 0.0f;
-    curSampleRight = 0.0f;
-    nxtSampleLeft = 0.0f;
-    nxtSampleRight = 0.0f;
+    for (int n = 0; n < NUM_OUTPUTS; n++) {
+        curSample[n] = 0.0f;
+        nxtSample[n] = 0.0f;
+    }
 }
 
 
@@ -76,16 +76,16 @@ U32_UNION tmpFrames;
 // **************************************************************************
 void PitchBend::process(AudioBuffer<float> & srcBuff, AudioBuffer<float> & dstBuff) {
 
-const float *srcPtrL, *srcPtrR;
-float *dstPtrL, *dstPtrR;
+const float *srcPtr[NUM_OUTPUTS];
+float *dstPtr[NUM_OUTPUTS];
 uint16_t j = 0;
-int s;
+int s, n;
 double slope;
 
-    srcPtrL = srcBuff.getReadPointer(0);
-    dstPtrL = dstBuff.getWritePointer(0);
-    srcPtrR = srcBuff.getReadPointer(1);
-    dstPtrR = dstBuff.getWritePointer(1);
+    for (n = 0; n < NUM_OUTPUTS; n++) {
+        srcPtr[n] = srcBuff.getReadPointer(n);
+        dstPtr[n] = dstBuff.getWritePointer(n);
+    }
 
     for (s = 0; s < m_numframes; s++) {
 
@@ -94,20 +94,23 @@ double slope;
             j += sampleFractAcc.u16[1];
 
             if (j == 1) {
-                curSampleLeft = nxtSampleLeft;
-                curSampleRight = nxtSampleRight;
+                for (n = 0; n < NUM_OUTPUTS; n++) {
+                    curSample[n] = nxtSample[n];
+                    nxtSample[n] = (double)srcPtr[n][j-1];
+                }
             }
             else {
-                curSampleLeft = (double)srcPtrL[j-2];
-                curSampleRight = (double)srcPtrR[j-2];
+                for (n = 0; n < NUM_OUTPUTS; n++) {
+                    curSample[n] = (double)srcPtr[n][j-2];
+                    nxtSample[n] = (double)srcPtr[n][j-1];
+                 }
             }
-            nxtSampleLeft = (double)srcPtrL[j-1];
-            nxtSampleRight = (double)srcPtrR[j-1];
             sampleFractAcc.u16[1] = 0;
         }
 
         slope = (1.0 / (double)0xffff) * (double)sampleFractAcc.u16[0];
-        *dstPtrL++ = curSampleLeft + ((nxtSampleLeft - curSampleLeft) * slope);
-        *dstPtrR++ = curSampleRight + ((nxtSampleRight - curSampleRight) * slope);
+        for (n = 0; n < NUM_OUTPUTS; n++) {
+            *dstPtr[n]++ = curSample[n] + ((nxtSample[n] - curSample[n]) * slope);
+        }
     }
 }

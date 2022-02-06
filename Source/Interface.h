@@ -28,6 +28,14 @@ public:
 
 private:
 
+    const float meter_left{ 100.0f };
+    const float meter_top{ 50.0f };
+    const float meter_width{ 20.0f };
+    const float meter_height{ 222.0f };
+    const float meter_spacing{ 86.0f };
+    const float meter_ticks{ 6.0f };
+    const int num_meters{ 8 };
+
     Rmixer * rmixer;
     MainComponent * mainComponent;
     VoiceManager * voiceManager;
