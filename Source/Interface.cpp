@@ -198,16 +198,16 @@ void Interface::paint (juce::Graphics& g)
 
 float v, vs;
 
+    String c("Chan ");
+
     g.fillAll (Colours::black);
 
-    g.setColour(Colours::white);
+    g.setColour(Colour(0xffa2a2a2));
     vs = (meter_height / meter_ticks);
     float f = meter_left - 10.0f;
 
     for (int m = 0; m < num_meters; m++) {
-
         v = meter_top;
-
         for (int t = 0; t < meter_ticks; t++) {
             g.drawHorizontalLine(v, f, f + 10.0f);
             g.drawHorizontalLine(v + (vs / 2.0f), f + 5.0f, f + 10.0f);
@@ -215,23 +215,23 @@ float v, vs;
         }
         v -= 1.0f;
         g.drawHorizontalLine(v, f, f + 10.0f);
-
         g.setFont(11.0f);
         v = meter_top + 3.0f;
-        g.drawSingleLineText("0", f - 4, v, Justification::right);
+        g.drawSingleLineText("0", f - 4.0f, v, Justification::right);
         v += vs;
-        g.drawSingleLineText("-10", f - 4, v, Justification::right);
+        g.drawSingleLineText("-10", f - 4.0f, v, Justification::right);
         v += vs;
-        g.drawSingleLineText("-20", f - 4, v, Justification::right);
+        g.drawSingleLineText("-20", f - 4.0f, v, Justification::right);
         v += vs;
-        g.drawSingleLineText("-30", f - 4, v, Justification::right);
+        g.drawSingleLineText("-30", f - 4.0f, v, Justification::right);
         v += vs;
-        g.drawSingleLineText("-40", f - 4, v, Justification::right);
+        g.drawSingleLineText("-40", f - 4.0f, v, Justification::right);
         v += vs;
-        g.drawSingleLineText("-50", f - 4, v, Justification::right);
+        g.drawSingleLineText("-50", f - 4.0f, v, Justification::right);
         v += vs;
-        g.drawSingleLineText("-60", f - 4, v, Justification::right);
+        g.drawSingleLineText("-60", f - 4.0f, v, Justification::right);
 
+        g.drawSingleLineText(c + String(m + 1), f - 2.0f, v + 20.0f, Justification::left);
         f += meter_spacing;
     }
 }
@@ -240,7 +240,6 @@ void Interface::resized()
 {
     for (int m = 0; m < 8; m++) {
         verticalMeter[m].setBounds(meter_left + (m *meter_spacing), meter_top, meter_width, meter_height);
-        //meterLabel[m]->setBounds(hBase + (m * hSpace) - 20, 260, 60, 30);
     }
 }
 

@@ -83,6 +83,7 @@ private:
 
     std::unique_ptr<juce::ComboBox> midiBox;
     std::unique_ptr<juce::Label> lblVersion;
+    std::unique_ptr<juce::Label> lblMidiDev;
     std::unique_ptr<Interface> interface;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

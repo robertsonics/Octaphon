@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="KONqgn" name="Octophon" projectType="guiapp" useAppConfig="0"
+<JUCERPROJECT id="KONqgn" name="Octaphon" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="1" jucerFormatVersion="1" headerPath="~/Projects/Octaphon/Source&#10;~/Projects/Octaphon/Source/DSP"
               bundleIdentifier="com.robertsonics.octaphon">
-  <MAINGROUP id="Pazthf" name="Octophon">
+  <MAINGROUP id="Pazthf" name="Octaphon">
     <GROUP id="{7C3CA0B6-9721-6AD1-48C7-36F437DF311F}" name="Source">
       <GROUP id="{28DA7AB2-1EFF-09DB-F087-03E116B88673}" name="DSP">
         <FILE id="La5Ddz" name="DspUtils.cpp" compile="1" resource="0" file="Source/DSP/DspUtils.cpp"/>

@@ -45,8 +45,7 @@ String dmsg;
     midiBox->addListener (this);
     midiBox->setBounds(getWidth() - 280, 10, 260, 24);
 
-    lblVersion.reset (new juce::Label ("new label",
-                                        TRANS("Test Version 0.10")));
+    lblVersion.reset (new juce::Label ("new label", TRANS("Octaphon Beta v0.10")));
     addAndMakeVisible (lblVersion.get());
     lblVersion->setFont (juce::Font (16.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
     lblVersion->setJustificationType (juce::Justification::centredLeft);
@@ -54,6 +53,15 @@ String dmsg;
     lblVersion->setColour (juce::TextEditor::textColourId, juce::Colours::black);
     lblVersion->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
     lblVersion->setBounds (20, 10, 200, 24);
+
+    lblMidiDev.reset (new juce::Label ("new label", TRANS("MIDI Input: ")));
+    addAndMakeVisible (lblMidiDev.get());
+    lblMidiDev->setFont (juce::Font (16.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    lblMidiDev->setJustificationType (juce::Justification::centredLeft);
+    lblMidiDev->setEditable (false, false, false);
+    lblMidiDev->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    lblMidiDev->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+    lblMidiDev->setBounds (getWidth() - 360, 10, 200, 24);
 
     interface.reset(new Interface(this, &rmixer, &voiceManager, &soundManager));
     addAndMakeVisible(interface.get());
@@ -122,6 +130,7 @@ void MainComponent::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    //g.fillAll(Colours::black);
 
 }
 

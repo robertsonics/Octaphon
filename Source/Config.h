@@ -28,7 +28,7 @@
 
 // Graphical user interface defines
 
-#define MY_BG_COLOUR            Colour(0xff181818)
+#define MY_BG_COLOUR            Colour(0xff121212)
 #define MY_TAB_COLOUR           Colour(0xff252525)
 #define MY_BUTTON_COLOUR        Colours::royalblue
 #define MY_TEXT_COLOUR          Colours::skyblue
