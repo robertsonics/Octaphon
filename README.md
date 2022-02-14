@@ -18,8 +18,8 @@ Octaphon is being developed in conjuction with a custom Raspberry Pi multi-chann
 https://robertsonics.com/2022/02/10/multi-channel-audio-for-the-rasperry-pi-part-2-the-octaphon-project/
 
 This HAT uses the RPi I2S and I2C ports on the RPi GPIO header to provide 8 channels of output
-(as well as 2 channels of input, not currently used by this software.) Because I do not curr-
-ently have official linux Alsa ASoC drivers for this HAT, the Octaphon software contains some
+(as well as 2 channels of input, not yet used by this software.) Because I don't currently
+have official linux Alsa ASoC drivers for this HAT, the Octaphon software contains some
 dedicated code in the Mixer module to utilize 8 channels of output. Using a custom device tree
 overlay file, the HAT presents to linux as a stereo board, and the mixer module uses standard
 Alsa API functions to manage and play audio. But the HAT drives the I2S clocks at 4X the audio
@@ -100,9 +100,15 @@ gains.
 
 Octaphon is still very much in the early stages. Here are some things on short to-do list:
 
-Volume fader, used to provide attack, release, crossfades and generally smooth volume changes.
+- Volume fader, used to provide attack, release, crossfades and generally smooth volume changes.
 
-Samplerate conversion (semitone offsets) for each note event.
+- Looping.
+
+- Samplerate conversion (semitone offsets) for each note event.
+
+- Serial control
+
+- Ethernet control (likely using OSC)
 
 
 #### Building Octaphon
