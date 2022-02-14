@@ -36,6 +36,7 @@ is done both on startup and also can be done at runtime to change the sound sele
 of this, Octaphon will support looping over a specified address range, which need not be the
 beginning and end of the file.
 
+
 #### Current Capabilites
 
 Octaphon is intended to be run headless as an embedded audio player. I've implemented a GUI
@@ -56,6 +57,7 @@ time. Currently set to 128.
 At present, Octaphon implements a MIDI interface to trigger sounds. The MIDI input devices
 are enumerated and presented in a drop-down combo box and can be selected from the GUI.
 
+
 #### Initialization and setup
 
 An Excel-generated csv file is used to define a set of sound files to be loaded as well as
@@ -65,14 +67,32 @@ first column - all other lines in the file are ignored and may be used for docum
 
 **#PATH** This command specifies an absolute path to the directory that contains sound files.
 
-Example:
-,,,
-#PATH, ~/Sounds/
-,,,
+| Command | Absolute path to sound directory |
+|---------|----------------------------------|
+| #PATH   | ~/Sounds/                        |
+
 
 **#FILE** This command loads a sound file into memory
 
+| Command | Sound Number | Filename     | Loop Start | Loop End |
+|---------|--------------|--------------|------------|----------|
+| #PATH   | 3            | track001.wav | 389644     | 408377   |
+
+
+**#NOTE** This command defines the action for a specific MIDI Note
+
+| Command | Note | Sound | dB 1 | dB 2 | dB 3 | dB 4 | dB 5 | dB 6 | dB 7 | dB 8 | Loop |
+|---------|------|-------|------|------|------|------|------|------|------|------|------|
+| #PATH   | 3    | 12    | 0    | 0    | -8   | -10  | -100 | -100 | 0    | 0    | 0    |
+
+There can be up to NUM_OUTPUTS #NOTE commands for any MIDI Note number. The command specifies
+a sound using the Sound Number assigned in the #FILE command. Gains for each output are in
+dB, with -100 being muted. If Loop = 1, the sound will loop over the loop points specified
+in the corresponding #FILE command.
+
+
 #### Things to do:
+
 
 #### Building Octaphon
 
@@ -89,7 +109,7 @@ and build from within CodeBlocks.
 
 #### Running Octaphon
 
-The build creates a single executable which can be from the command line
+The build creates a single executable which can be from the command line.
 
 
 
