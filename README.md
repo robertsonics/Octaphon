@@ -72,7 +72,7 @@ first column - all other lines in the file are ignored and may be used for docum
 | #PATH   | ~/Sounds/                        |
 
 
-**#FILE** This command loads a sound file into memory
+**#FILE** This command loads a mono sound file into memory
 
 | Command | Sound Number | Filename     | Loop Start | Loop End |
 |---------|--------------|--------------|------------|----------|
@@ -83,12 +83,15 @@ first column - all other lines in the file are ignored and may be used for docum
 
 | Command | Note | Sound | dB 1 | dB 2 | dB 3 | dB 4 | dB 5 | dB 6 | dB 7 | dB 8 | Loop |
 |---------|------|-------|------|------|------|------|------|------|------|------|------|
-| #PATH   | 3    | 12    | 0    | 0    | -8   | -10  | -100 | -100 | 0    | 0    | 0    |
+| #NOTE   | 3    | 12    | 0    | 0    | -8   | -10  | -100 | -100 | 0    | 0    | 1    |
 
-There can be up to NUM_OUTPUTS #NOTE commands for any MIDI Note number. The command specifies
-a sound using the Sound Number assigned in the #FILE command. Gains for each output are in
-dB, with -100 being muted. If Loop = 1, the sound will loop over the loop points specified
-in the corresponding #FILE command.
+The command specifies a sound using the Sound Number assigned in the #FILE command. Gains for
+each output are in dB, with 0 being full scale (no attenuation) and -100 being muted. If Loop=1,
+the sound will loop over the loop points specified in the corresponding #FILE command.
+
+There can be up to NUM_OUTPUTS #NOTE commands for a given MIDI Note number. This allows a single
+MIDI event to trigger up to NUM_OUTPUTS sounds, with each sound having a different set of output
+gains.
 
 
 #### Things to do:
