@@ -43,11 +43,34 @@ intended to be displayed on an 800X480 GUI LED panel, showing signal level on 8 
 well as timing/performance information. Of course, it also displays fine on a standard
 desktop used for development.
 
+Some of the compile-time options are presented in the config.h file. These include:
+
+**POLYPHONY** - The number of sounds that can be played simultaneously. Currently set to 32.
+
+**NUM_OUTPUTS** - The number of outputs supported by the mixer. This is also the maximum
+number of sounds that any single MIDI note can trigger. Currently set to 8.
+
+**MAX_SOUNDS_PER_BANK** - The number of sound files that can be loaded into memory at any one
+time. Currently set to 128.
+
 At present, Octaphon implements a MIDI interface to trigger sounds. The MIDI input devices
 are enumerated and presented in a drop-down combo box and can be selected from the GUI.
 
+#### Initialization and setup
+
 An Excel-generated csv file is used to define a set of sound files to be loaded as well as
-function definitions for MIDI Note events.
+function definitions for MIDI Note events. The format of this csv file is ongoing, but at the
+moment it supports three functions. Functions lines are denoted by the function code in the
+first column - all other lines in the file are ignored and may be used for documentation.
+
+**#PATH** This command specifies an absolute path to the directory that contains sound files.
+
+Example:
+,,,
+#PATH, ~/Sounds/
+,,,
+
+**#FILE** This command loads a sound file into memory
 
 #### Things to do:
 
@@ -68,9 +91,6 @@ and build from within CodeBlocks.
 
 The build creates a single executable which can be from the command line
 
-
-**wTrig.start()** - you must call this method first to initialize the serial
-  communications.
 
 
 
