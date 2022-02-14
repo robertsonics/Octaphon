@@ -74,20 +74,22 @@ first column - all other lines in the file are ignored and may be used for docum
 
 **#FILE** This command loads a mono sound file into memory
 
-| Command | Sound Number | Filename     | Loop Start | Loop End |
-|---------|--------------|--------------|------------|----------|
-| #PATH   | 3            | track001.wav | 389644     | 408377   |
+| Command | Idx | Filename     | Loop Start | Loop End |
+|---------|-----|--------------|------------|----------|
+| #FILE   | 3   | track001.wav | 389644     | 408377   |
 
 
 **#NOTE** This command defines the action for a specific MIDI Note
 
-| Command | Note | Sound | dB 1 | dB 2 | dB 3 | dB 4 | dB 5 | dB 6 | dB 7 | dB 8 | Loop |
-|---------|------|-------|------|------|------|------|------|------|------|------|------|
-| #NOTE   | 3    | 12    | 0    | 0    | -8   | -10  | -100 | -100 | 0    | 0    | 1    |
+| Cmd   | Note | Idx | Tuning | dB1 | dB2 | dB3 | dB4 | dB5 | dB6 | dB7 | dB8 | Loop |
+|-------|------|-----|--------|-----|-----|-----|-----|-----|-----|-----|-----|------|
+| #NOTE | 3    | 12  | -2     | 0   | 0   | -8  | -10 | -99 | -99 | 0   | 0   | 0    |
 
-The command specifies a sound using the Sound Number assigned in the #FILE command. Gains for
-each output are in dB, with 0 being full scale (no attenuation) and -100 being muted. If Loop=1,
-the sound will loop over the loop points specified in the corresponding #FILE command.
+This command specifies a sound to be played using the sound index (Idx) assigned in the #FILE
+command. The sound will be played at nominal pitch if Tuning=0, or plus or minus a pitch offset
+of the specified number of semitones. Gains for each output are in dB, with 0 being full scale
+(no attenuation) and -99 being completely muted in that output. If Loop=1, the sound will loop
+over the loop points specified in the corresponding #FILE command.
 
 There can be up to NUM_OUTPUTS #NOTE commands for a given MIDI Note number. This allows a single
 MIDI event to trigger up to NUM_OUTPUTS sounds, with each sound having a different set of output
@@ -95,6 +97,12 @@ gains.
 
 
 #### Things to do:
+
+Octaphon is still very much in the early stages. Here are some things on short to-do list:
+
+Volume fader, used to provide attack, release, crossfades and generally smooth volume changes.
+
+Samplerate conversion (semitone offsets) for each note event.
 
 
 #### Building Octaphon
